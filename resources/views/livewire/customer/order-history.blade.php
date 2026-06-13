@@ -47,7 +47,7 @@
                                     <div class="font-bold text-sm">#{{ $order->order_code ?? substr($order->id, 0, 8) }}</div>
                                     <div class="text-xs opacity-75 mt-0.5">{{ $order->created_at->format('d M Y, H:i') }}</div>
                                 </div>
-                                <div class="text-xs font-bold px-2.5 py-1 rounded-full bg-white bg-opacity-50 border border-current shadow-sm">
+                                <div class="text-[11px] font-bold px-4 py-1.5 rounded-full bg-white bg-opacity-60 border border-current shadow-sm whitespace-nowrap">
                                     {{ $statuses[$order->status] ?? $order->status }}
                                 </div>
                             </div>
