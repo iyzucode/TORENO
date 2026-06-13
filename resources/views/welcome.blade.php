@@ -2,7 +2,7 @@
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>TORENO</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -570,8 +570,21 @@
             .nav-links { display: none; }
             .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
             .stats-row { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        /* Mencegah double tap zoom dan pinch zoom di iOS */
+        html, body {
+            touch-action: pan-x pan-y;
+        }
+        /* Mencegah auto-zoom saat fokus ke input di iOS (iOS zoom jika font < 16px) */
+        input, select, textarea {
+            font-size: 16px !important;
         }
     </style>
+    <script>
+        // Mencegah gesture pinch-to-zoom di iOS Safari
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+    </script>
 </head>
 <body>
 

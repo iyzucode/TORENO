@@ -29,7 +29,37 @@
             </div>
             
             @if($order->status === 'pending')
-                <p class="text-xs text-gray-500 mt-5 px-2">Silakan menuju Kasir dan sebutkan <strong class="text-toreno-brown">Meja {{ $order->table->table_number ?? '-' }}</strong> atau <strong class="text-toreno-brown">Nama {{ $order->customer_name }}</strong> untuk melakukan pembayaran.</p>
+                @if($order->payment_method === 'qris' && $order->payment_status === 'unpaid')
+                    <p class="text-sm text-gray-600 mt-2 px-2 mb-4 font-medium">Silakan scan kode QRIS di bawah ini untuk menyelesaikan pembayaran:</p>
+                    
+                    @if($order->snap_token)
+                        <div class="bg-white p-4 rounded-3xl shadow-md border-2 border-dashed border-gray-200 inline-block mx-auto mb-4 relative group">
+                            <div class="absolute inset-0 bg-white/40 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl z-10 cursor-pointer">
+                                <svg class="w-8 h-8 text-toreno-brown mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                <span class="text-sm font-bold text-toreno-brown">Simpan QRIS</span>
+                            </div>
+                            <img src="{{ $order->snap_token }}" alt="QRIS Payment" class="w-64 h-64 object-contain mx-auto">
+                        </div>
+
+                        @if(app()->environment('local') || app()->environment('development'))
+                            <div class="mb-4 bg-gray-50 border border-gray-200 p-3 rounded-xl max-w-sm mx-auto flex items-center">
+                                <input type="text" readonly value="{{ $order->snap_token }}" class="text-[10px] text-gray-500 bg-transparent border-none focus:ring-0 w-full" id="qrisUrl">
+                                <button onclick="navigator.clipboard.writeText(document.getElementById('qrisUrl').value); alert('URL disalin!');" class="ml-2 text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap">
+                                    Copy URL
+                                </button>
+                            </div>
+                        @endif
+
+                        <div class="bg-blue-50 text-blue-800 text-xs p-3 rounded-xl mb-4 border border-blue-100 flex items-start text-left">
+                            <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <p>Sistem akan otomatis memverifikasi pembayaran Anda. Status akan diperbarui segera setelah sukses.</p>
+                        </div>
+                    @else
+                        <p class="text-xs text-red-500 mt-2">QR Code sedang diproses atau tidak ditemukan. Silakan hubungi kasir.</p>
+                    @endif
+                @else
+                    <p class="text-xs text-gray-500 mt-5 px-2">Silakan menuju Kasir dan sebutkan <strong class="text-toreno-brown">Meja {{ $order->table->table_number ?? '-' }}</strong> atau <strong class="text-toreno-brown">Nama {{ $order->customer_name }}</strong> untuk melakukan pembayaran.</p>
+                @endif
             @elseif($order->status === 'cooking')
                 <p class="text-xs text-gray-500 mt-5 px-2">Pesanan Anda sedang disiapkan oleh dapur kami. Harap tunggu sebentar di meja Anda.</p>
             @elseif($order->status === 'completed')

@@ -14,7 +14,8 @@ class MenuCatalog extends Component
             if ($table) {
                 session([
                     'table_id' => $table->id, 
-                    'table_number' => $table->table_number
+                    'table_number' => $table->table_number,
+                    'qr_hash' => $qr_hash
                 ]);
             } else {
                 abort(404, 'Meja tidak valid atau tidak ditemukan.');

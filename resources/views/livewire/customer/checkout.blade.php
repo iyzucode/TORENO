@@ -25,10 +25,31 @@
             <input type="text" id="customer_name" wire:model="customer_name" placeholder="Masukkan nama Anda" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4">
             @error('customer_name') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
         </div>
-        <div class="mb-2">
-            <label for="customer_phone" class="block text-gray-700 text-xs font-bold mb-2">Nomor Handphone (WhatsApp): <span class="text-red-500">*</span></label>
+        <div class="mb-4">
+            <label for="customer_phone" class="block text-gray-700 text-xs font-bold mb-2">Nomor Handphone: <span class="text-red-500">*</span></label>
             <input type="tel" id="customer_phone" wire:model="customer_phone" placeholder="Contoh: 08123456789" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4">
             @error('customer_phone') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+        </div>
+        <div class="mb-2">
+            <label class="block text-gray-700 text-xs font-bold mb-3">Metode Pembayaran: <span class="text-red-500">*</span></label>
+            <div class="space-y-2">
+                <!-- Disembunyikan sementara sesuai permintaan -->
+                <label style="display: none;" class="flex items-center p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition" :class="{ 'border-toreno-accent bg-orange-50': $wire.payment_method === 'cash' }">
+                    <input type="radio" wire:model.live="payment_method" value="cash" class="text-toreno-accent focus:ring-toreno-accent mr-3">
+                    <div class="flex-1">
+                        <span class="block font-bold text-gray-800 text-sm">Tunai (Bayar di Kasir)</span>
+                        <span class="block text-xs text-gray-500 mt-0.5">Lakukan pembayaran ke kasir dengan menyebutkan nomor meja.</span>
+                    </div>
+                </label>
+                <label class="flex items-start gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition" :class="{ 'border-toreno-accent bg-orange-50': $wire.payment_method === 'qris' }">
+                    <input type="radio" wire:model.live="payment_method" value="qris" class="text-toreno-accent focus:ring-toreno-accent w-5 h-5 mt-0.5 flex-shrink-0">
+                    <div class="flex-1">
+                        <span class="block font-bold text-gray-800 text-base">QRIS</span>
+                        <span class="block text-xs text-gray-500 mt-0.5">Pembayaran cashless cepat. Pesanan otomatis masuk ke dapur.</span>
+                    </div>
+                </label>
+            </div>
+            @error('payment_method') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
         </div>
     </div>
 
@@ -52,10 +73,18 @@
             <span class="text-toreno-brown" x-text="'Rp ' + $store.cart.totalAmount.toLocaleString('id-ID')"></span>
         </div>
         
-        <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-xs text-yellow-800 flex items-start shadow-sm">
-            <svg class="w-5 h-5 mr-2 flex-shrink-0 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <p>Silakan lakukan pembayaran secara langsung <strong>(CASH)</strong> ke Kasir setelah pesanan dikonfirmasi.</p>
-        </div>
+        <template x-if="$wire.payment_method === 'cash'">
+            <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-xs text-yellow-800 flex items-start shadow-sm transition-all duration-300">
+                <svg class="w-5 h-5 mr-2 flex-shrink-0 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <p>Silakan lakukan pembayaran secara langsung <strong>(CASH)</strong> ke Kasir setelah pesanan dikonfirmasi.</p>
+            </div>
+        </template>
+        <template x-if="$wire.payment_method === 'qris'">
+            <div class="mt-6 bg-green-50 border border-green-200 rounded-xl p-3 text-xs text-green-800 flex items-start shadow-sm transition-all duration-300">
+                <svg class="w-5 h-5 mr-2 flex-shrink-0 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <p>Setelah konfirmasi, Anda akan diarahkan untuk memindai <strong>QRIS</strong>. Pembayaran otomatis diverifikasi.</p>
+            </div>
+        </template>
 
         <button @click="$wire.processCheckout(Object.values($store.cart.items))" wire:loading.attr="disabled" class="w-full mt-6 bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center">
             <span wire:loading.remove>Konfirmasi Pesanan</span>

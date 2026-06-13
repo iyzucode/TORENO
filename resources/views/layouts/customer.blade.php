@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Coffee TORENO') }}</title>
@@ -13,6 +13,23 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
+        <style>
+            /* Mencegah double tap zoom dan pinch zoom di iOS */
+            html, body {
+                touch-action: pan-x pan-y;
+            }
+            /* Mencegah auto-zoom saat fokus ke input di iOS (iOS zoom jika font < 16px) */
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        </style>
+        <script>
+            // Mencegah gesture pinch-to-zoom di iOS Safari
+            document.addEventListener('gesturestart', function (e) {
+                e.preventDefault();
+            });
+        </script>
         @livewireStyles
     </head>
     <body class="font-sans text-gray-900 antialiased bg-gray-100">
@@ -27,7 +44,10 @@
                         <svg class="w-6 h-6 mr-2 text-toreno-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M2,21V19H20V21H2M20,8V5H18V8H20M20,3A2,2 0 0,1 22,5V8A2,2 0 0,1 20,10H18V13A4,4 0 0,1 14,17H8A4,4 0 0,1 4,13V3H20M16,5H6V13A2,2 0 0,0 8,15H14A2,2 0 0,0 16,13V5Z" /></svg>
                         TORENO
                     </div>
-                    <div>
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('customer.history') }}" class="text-white hover:text-toreno-cream transition" aria-label="Riwayat Pesanan" title="Riwayat Pesanan">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </a>
                         @if(session()->has('table_number'))
                             <span class="bg-toreno-cream text-toreno-brown text-xs font-extrabold px-4 py-1.5 rounded-full shadow-sm">
                                 Meja {{ session('table_number') }}

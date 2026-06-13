@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
@@ -13,6 +13,23 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            /* Mencegah double tap zoom dan pinch zoom di iOS */
+            html, body {
+                touch-action: pan-x pan-y;
+            }
+            /* Mencegah auto-zoom saat fokus ke input di iOS (iOS zoom jika font < 16px) */
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        </style>
+        <script>
+            // Mencegah gesture pinch-to-zoom di iOS Safari
+            document.addEventListener('gesturestart', function (e) {
+                e.preventDefault();
+            });
+        </script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">

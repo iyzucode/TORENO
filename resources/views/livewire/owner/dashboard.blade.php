@@ -5,7 +5,7 @@
 </x-slot>
 
 <div class="py-12 bg-gray-50 min-h-screen font-sans">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col gap-8 lg:gap-10">
         
         <!-- Filter Section -->
         <div class="bg-white/70 backdrop-blur-lg border border-white/50 p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
@@ -79,7 +79,7 @@
         </div>
 
         <!-- Data Analytics Summary -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <div class="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-100 flex items-center">
                 <div class="p-3 bg-blue-50 text-blue-500 rounded-xl mr-4">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path></svg>

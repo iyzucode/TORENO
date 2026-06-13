@@ -6,7 +6,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/t/{qr_hash}', \App\Livewire\Customer\MenuCatalog::class)->name('customer.catalog');
 Route::get('/cart', \App\Livewire\Customer\Cart::class)->name('customer.cart');
 Route::get('/checkout', \App\Livewire\Customer\Checkout::class)->name('customer.checkout');
+Route::get('/history', \App\Livewire\Customer\OrderHistory::class)->name('customer.history');
 Route::get('/order/{order_id}', \App\Livewire\Customer\OrderTracking::class)->name('customer.order');
+
+Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
 
 Route::view('/', 'welcome');
 

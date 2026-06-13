@@ -10,7 +10,7 @@ class Order extends Model
     use HasUuids;
 
     protected $fillable = [
-        'order_code', 'table_id', 'customer_name', 'customer_phone', 'status', 'payment_method', 'total_amount', 'notes'
+        'order_code', 'table_id', 'customer_name', 'customer_phone', 'status', 'payment_status', 'payment_method', 'snap_token', 'total_amount', 'notes'
     ];
 
     public function table() {
