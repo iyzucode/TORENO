@@ -30,7 +30,11 @@
                             <!-- Gambar (Fixed Size) -->
                             <div class="flex-shrink-0 bg-gray-50 rounded-xl overflow-hidden relative border border-gray-100" style="width: 96px; height: 96px; min-width: 96px; min-height: 96px;">
                                 @if($menu->image_url)
-                                    <img src="{{ asset('storage/' . $menu->image_url) }}" alt="{{ $menu->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    @if(Str::startsWith($menu->image_url, ['http://', 'https://']))
+                                        <img src="{{ $menu->image_url }}" alt="{{ $menu->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    @else
+                                        <img src="{{ asset('storage/' . $menu->image_url) }}" alt="{{ $menu->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    @endif
                                 @else
                                     <div class="flex items-center justify-center text-gray-400 bg-toreno-cream/30" style="width: 100%; height: 100%;">
                                         <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>

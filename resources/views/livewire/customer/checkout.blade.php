@@ -10,7 +10,19 @@
         </div>
     @enderror
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
+    <template x-if="$store.cart.totalCount === 0">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center mb-8">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <p class="text-gray-500 font-medium mb-4">Keranjang Anda masih kosong.</p>
+            <a wire:navigate href="{{ route('customer.catalog', ['qr_hash' => session('qr_hash', 'demo')]) }}" class="inline-block bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-2.5 px-6 rounded-xl shadow transition active:scale-95">
+                Lihat Menu
+            </a>
+        </div>
+    </template>
+
+    <template x-if="$store.cart.totalCount > 0">
+        <div>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
         <h3 class="font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Informasi Meja</h3>
         <div class="flex justify-between text-sm">
             <span class="text-gray-500">Nomor Meja</span>
@@ -91,6 +103,8 @@
             <span wire:loading>Memproses...</span>
         </button>
     </div>
+        </div>
+    </template>
 
     <script>
         document.addEventListener('livewire:initialized', () => {

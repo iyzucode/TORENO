@@ -60,7 +60,9 @@ class MenuManagement extends Component
 
         $imagePath = null;
         if ($this->image) {
-            $imagePath = $this->image->store('menus', 'public');
+            $imagePath = cloudinary()->uploadApi()->upload($this->image->getRealPath(), [
+                'folder' => 'TORENO/MENU'
+            ])['secure_url'];
         }
 
         Menu::updateOrCreate(['id' => $this->menu_id ?: null], [
