@@ -129,8 +129,27 @@
                         return Object.keys(this.items).length;
                     },
 
-                    get totalAmount() {
+                    taxRate: {{ (float)\App\Models\Setting::getVal('tax_rate', 0) }},
+                    serviceChargeType: '{{ \App\Models\Setting::getVal('service_charge_type', 'percentage') }}',
+                    serviceChargeRate: {{ (float)\App\Models\Setting::getVal('service_charge_rate', 0) }},
+                    
+                    get subtotalAmount() {
                         return Object.values(this.items).reduce((total, item) => total + (item.price * item.quantity), 0);
+                    },
+
+                    get taxAmount() {
+                        return this.subtotalAmount * (this.taxRate / 100);
+                    },
+
+                    get serviceChargeAmount() {
+                        if (this.serviceChargeType === 'fixed') {
+                            return this.serviceChargeRate;
+                        }
+                        return this.subtotalAmount * (this.serviceChargeRate / 100);
+                    },
+
+                    get totalAmount() {
+                        return this.subtotalAmount + this.taxAmount + this.serviceChargeAmount;
                     },
                     
                     clear() {

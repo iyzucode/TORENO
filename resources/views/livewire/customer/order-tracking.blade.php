@@ -88,6 +88,21 @@
             @endif
         @endforeach
         
+        <div class="space-y-2 mt-4 pt-4 border-t border-gray-100 text-sm">
+            <div class="flex justify-between items-center text-gray-500">
+                <span>Subtotal</span>
+                <span>Rp {{ number_format($order->subtotal ?? $order->total_amount, 0, ',', '.') }}</span>
+            </div>
+            <div class="flex justify-between items-center text-gray-500">
+                <span>Pajak ({{ $order->tax_rate }}%)</span>
+                <span>Rp {{ number_format($order->tax_amount, 0, ',', '.') }}</span>
+            </div>
+            <div class="flex justify-between items-center text-gray-500">
+                <span>{{ $order->service_charge_type === 'fixed' ? 'Biaya Layanan' : 'Biaya Layanan (' . floatval($order->service_charge_rate) . '%)' }}</span>
+                <span>Rp {{ number_format($order->service_charge_amount, 0, ',', '.') }}</span>
+            </div>
+        </div>
+        
         <div class="flex justify-between text-base font-bold mt-4 pt-4 border-t border-gray-100">
             <span class="text-gray-800">Total Pembayaran</span>
             <span class="text-toreno-brown">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>

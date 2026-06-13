@@ -32,6 +32,20 @@
                                 </li>
                             @endforeach
                         </ul>
+                        <div class="space-y-2 mt-2 border-t border-gray-100 pt-2 mb-3 text-sm">
+                            <div class="flex justify-between items-center text-gray-500">
+                                <span>Subtotal:</span>
+                                <span>Rp {{ number_format($order->subtotal ?? $order->total_amount, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-gray-500">
+                                <span>Pajak ({{ $order->tax_rate }}%):</span>
+                                <span>Rp {{ number_format($order->tax_amount, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-gray-500">
+                                <span>{{ $order->service_charge_type === 'fixed' ? 'Biaya Layanan:' : 'Biaya Layanan (' . floatval($order->service_charge_rate) . '%):' }}</span>
+                                <span>Rp {{ number_format($order->service_charge_amount, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
                         <div class="flex justify-between items-center border-t border-gray-200 pt-3 mb-4">
                             <span class="font-bold text-gray-700">Total Tagihan:</span>
                             <span class="font-bold text-toreno-brown text-xl">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>

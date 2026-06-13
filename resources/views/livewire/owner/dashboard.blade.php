@@ -194,6 +194,24 @@
                                                 </tr>
                                                 @endforeach
                                             </tbody>
+                                            <tfoot class="border-t border-gray-100 bg-gray-50/30">
+                                                <tr>
+                                                    <td colspan="3" class="px-4 py-2 text-right text-xs font-semibold text-gray-500 uppercase">Subtotal</td>
+                                                    <td class="px-4 py-2 text-right font-medium text-gray-700">Rp {{ number_format($order->subtotal ?? $order->total_amount, 0, ',', '.') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="px-4 py-2 text-right text-xs font-semibold text-gray-500 uppercase">Pajak ({{ $order->tax_rate }}%)</td>
+                                                    <td class="px-4 py-2 text-right font-medium text-gray-700">Rp {{ number_format($order->tax_amount, 0, ',', '.') }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="px-4 py-2 text-right text-xs font-semibold text-gray-500 uppercase">{{ $order->service_charge_type === 'fixed' ? 'Biaya Layanan' : 'Biaya Layanan (' . floatval($order->service_charge_rate) . '%)' }}</td>
+                                                    <td class="px-4 py-2 text-right font-medium text-gray-700">Rp {{ number_format($order->service_charge_amount, 0, ',', '.') }}</td>
+                                                </tr>
+                                                <tr class="border-t border-gray-200">
+                                                    <td colspan="3" class="px-4 py-3 text-right text-sm font-bold text-gray-800 uppercase">Total</td>
+                                                    <td class="px-4 py-3 text-right font-bold text-toreno-brown">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                         @if($order->notes)
                                         <div class="px-4 py-3 bg-yellow-50/50 border-t border-yellow-100 text-yellow-800 text-xs flex items-start">

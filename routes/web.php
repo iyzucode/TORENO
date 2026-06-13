@@ -35,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
         Route::get('/menus', \App\Livewire\Admin\MenuManagement::class)->name('menus');
         Route::get('/tables', \App\Livewire\Admin\TableManagement::class)->name('tables');
+        Route::get('/settings', \App\Livewire\Admin\Settings::class)->name('settings');
     });
 
     // Cashier Routes

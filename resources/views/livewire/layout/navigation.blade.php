@@ -33,6 +33,17 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @if(auth()->user()->role === 'admin')
+                    <x-nav-link :href="route('admin.menus')" :active="request()->routeIs('admin.menus')" wire:navigate>
+                        {{ __('Menu') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
+                        {{ __('Meja') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.settings')" :active="request()->routeIs('admin.settings')" wire:navigate>
+                        {{ __('Pengaturan') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -84,6 +95,17 @@ new class extends Component
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if(auth()->user()->role === 'admin')
+            <x-responsive-nav-link :href="route('admin.menus')" :active="request()->routeIs('admin.menus')" wire:navigate>
+                {{ __('Menu') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
+                {{ __('Meja') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.settings')" :active="request()->routeIs('admin.settings')" wire:navigate>
+                {{ __('Pengaturan') }}
+            </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

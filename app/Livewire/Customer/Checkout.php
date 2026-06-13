@@ -14,7 +14,7 @@ class Checkout extends Component
 
     public $payment_method = 'qris';
 
-    public function processCheckout($cartData)
+    public function processCheckout($cartData, $frontendSubtotal = 0, $frontendTaxAmount = 0, $frontendServiceChargeAmount = 0, $frontendTotalAmount = 0)
     {
         $this->validate([
             'customer_name' => 'required|min:3',
@@ -31,7 +31,7 @@ class Checkout extends Component
             return;
         }
 
-        $total = 0;
+        $backendSubtotal = 0;
         $orderItemsData = [];
         
         foreach ($cartData as $item) {
@@ -43,34 +43,63 @@ class Checkout extends Component
             $quantity = (int)$item['quantity'];
             if ($quantity <= 0) continue;
 
-            $subtotal = $menu->price * $quantity;
-            $total += $subtotal;
+            $itemSubtotal = $menu->price * $quantity;
+            $backendSubtotal += $itemSubtotal;
 
             $orderItemsData[] = [
                 'menu_id' => $menu->id,
                 'menu_name' => $menu->name,
                 'quantity' => $quantity,
-                'price' => $menu->price,
-                'subtotal' => $subtotal,
+                'price' => $menu->price, // Harga asli dari DB
+                'subtotal' => $itemSubtotal,
                 'notes' => $item['notes'] ?? '',
             ];
         }
 
         if (empty($orderItemsData)) {
-            $this->addError('cart', 'Item pesanan tidak valid.');
+            $this->addError('cart', 'Item pesanan tidak valid atau sudah tidak tersedia.');
+            return;
+        }
+
+        $taxRate = (float)\App\Models\Setting::getVal('tax_rate', 0);
+        $serviceChargeType = \App\Models\Setting::getVal('service_charge_type', 'percentage');
+        $serviceChargeRate = (float)\App\Models\Setting::getVal('service_charge_rate', 0);
+        
+        $backendTaxAmount = $backendSubtotal * ($taxRate / 100);
+        
+        $backendServiceChargeAmount = $serviceChargeType === 'fixed' 
+            ? $serviceChargeRate 
+            : $backendSubtotal * ($serviceChargeRate / 100);
+            
+        $backendGrandTotal = $backendSubtotal + $backendTaxAmount + $backendServiceChargeAmount;
+
+        // Validasi strict: cocokkan hitungan backend dengan frontend
+        if (
+            abs($backendSubtotal - (float)$frontendSubtotal) > 0.1 ||
+            abs($backendTaxAmount - (float)$frontendTaxAmount) > 0.1 ||
+            abs($backendServiceChargeAmount - (float)$frontendServiceChargeAmount) > 0.1 ||
+            abs($backendGrandTotal - (float)$frontendTotalAmount) > 0.1
+        ) {
+            $this->addError('cart', 'Terjadi perubahan harga menu atau biaya pada sistem. Silakan refresh halaman keranjang Anda.');
             return;
         }
 
         $phonePart = substr($this->customer_phone, -4);
         $datePart = now()->format('YmdHi');
-        $orderCode = $phonePart . $datePart . rand(100, 999); // added random to ensure unique if multiple orders very quickly
+        $orderCode = $phonePart . $datePart . rand(100, 999);
 
         $order = Order::create([
             'order_code' => $orderCode,
             'table_id' => session('table_id'),
             'customer_name' => $this->customer_name,
             'customer_phone' => $this->customer_phone,
-            'total_amount' => $total,
+            'subtotal' => $backendSubtotal,
+            'tax_rate' => $taxRate,
+            'tax_amount' => $backendTaxAmount,
+            'service_charge_type' => $serviceChargeType,
+            'service_charge_rate' => $serviceChargeRate,
+            'service_charge_amount' => $backendServiceChargeAmount,
+            'total_amount' => $backendGrandTotal,
             'status' => 'pending',
             'payment_status' => 'unpaid',
             'payment_method' => $this->payment_method,

@@ -123,8 +123,22 @@
 
             <!-- Total Bar -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-24">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-gray-500 font-medium">Total Pembayaran</span>
+                <div class="space-y-2 mb-4 text-sm">
+                    <div class="flex justify-between items-center text-gray-500">
+                        <span>Subtotal</span>
+                        <span x-text="'Rp ' + $store.cart.subtotalAmount.toLocaleString('id-ID')"></span>
+                    </div>
+                    <div class="flex justify-between items-center text-gray-500">
+                        <span x-text="'Pajak (' + $store.cart.taxRate + '%)'"></span>
+                        <span x-text="'Rp ' + $store.cart.taxAmount.toLocaleString('id-ID')"></span>
+                    </div>
+                    <div class="flex justify-between items-center text-gray-500">
+                        <span x-text="$store.cart.serviceChargeType === 'fixed' ? 'Biaya Layanan' : 'Biaya Layanan (' + $store.cart.serviceChargeRate + '%)'"></span>
+                        <span x-text="'Rp ' + $store.cart.serviceChargeAmount.toLocaleString('id-ID')"></span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mb-4 pt-4 border-t border-gray-100">
+                    <span class="text-gray-800 font-bold">Total Pembayaran</span>
                     <span class="text-xl font-black text-toreno-brown" x-text="'Rp ' + $store.cart.totalAmount.toLocaleString('id-ID')"></span>
                 </div>
                 <a wire:navigate href="{{ route('customer.checkout') }}" class="block w-full bg-toreno-brown hover:bg-toreno-accent text-white text-center font-bold py-3.5 px-4 rounded-xl shadow-md transition text-lg active:scale-95">

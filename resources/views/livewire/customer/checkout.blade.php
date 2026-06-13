@@ -80,6 +80,20 @@
             </div>
         </template>
         
+        <div class="space-y-2 mt-4 pt-4 border-t border-gray-100 text-sm">
+            <div class="flex justify-between items-center text-gray-500">
+                <span>Subtotal</span>
+                <span x-text="'Rp ' + $store.cart.subtotalAmount.toLocaleString('id-ID')"></span>
+            </div>
+            <div class="flex justify-between items-center text-gray-500">
+                <span x-text="'Pajak (' + $store.cart.taxRate + '%)'"></span>
+                <span x-text="'Rp ' + $store.cart.taxAmount.toLocaleString('id-ID')"></span>
+            </div>
+            <div class="flex justify-between items-center text-gray-500">
+                <span x-text="$store.cart.serviceChargeType === 'fixed' ? 'Biaya Layanan' : 'Biaya Layanan (' + $store.cart.serviceChargeRate + '%)'"></span>
+                <span x-text="'Rp ' + $store.cart.serviceChargeAmount.toLocaleString('id-ID')"></span>
+            </div>
+        </div>
         <div class="flex justify-between text-base font-bold mt-4 pt-4 border-t border-gray-100">
             <span class="text-gray-800">Total Pembayaran</span>
             <span class="text-toreno-brown" x-text="'Rp ' + $store.cart.totalAmount.toLocaleString('id-ID')"></span>
@@ -98,7 +112,7 @@
             </div>
         </template>
 
-        <button @click="$wire.processCheckout(Object.values($store.cart.items))" wire:loading.attr="disabled" class="w-full mt-6 bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center">
+        <button @click="$wire.processCheckout(Object.values($store.cart.items), $store.cart.subtotalAmount, $store.cart.taxAmount, $store.cart.serviceChargeAmount, $store.cart.totalAmount)" wire:loading.attr="disabled" class="w-full mt-6 bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center">
             <span wire:loading.remove>Konfirmasi Pesanan</span>
             <span wire:loading>Memproses...</span>
         </button>
