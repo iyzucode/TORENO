@@ -630,8 +630,8 @@
                     <div class="stat-label">Menu Pilihan</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-num">3th</div>
-                    <div class="stat-label">Melayani Jakarta</div>
+                    <div class="stat-num">1th</div>
+                    <div class="stat-label">Melayani Yogyakarta</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-num">10K+</div>
@@ -728,7 +728,7 @@
             </div>
             <div class="footer-col">
                 <h4>Lokasi</h4>
-                <p>Jl. Sudirman No. 45<br>Jakarta Pusat, 10220<br>Indonesia</p>
+                <p>Wates, Kulonprogo, DIY</p>
                 <br>
                 <a href="#">Lihat di Maps →</a>
             </div>
