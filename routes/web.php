@@ -13,6 +13,7 @@ Route::view('/', 'welcome');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         $role = auth()->user()->role;
+        if ($role === 'owner') return redirect()->route('owner.dashboard');
         if ($role === 'admin') return redirect()->route('admin.dashboard');
         if ($role === 'cashier') return redirect()->route('cashier.dashboard');
         if ($role === 'kitchen') return redirect()->route('kitchen.dashboard');
@@ -20,6 +21,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::view('profile', 'profile')->name('profile');
+
+    // Owner Routes
+    Route::middleware(['role:owner,admin'])->prefix('owner')->name('owner.')->group(function () {
+        Route::get('/dashboard', \App\Livewire\Owner\Dashboard::class)->name('dashboard');
+    });
 
     // Admin Routes
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {

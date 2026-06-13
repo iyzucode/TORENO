@@ -10,7 +10,7 @@ class OrderItem extends Model
     use HasUuids;
 
     protected $fillable = [
-        'order_id', 'menu_id', 'quantity', 'notes'
+        'order_id', 'menu_id', 'menu_name', 'quantity', 'price', 'subtotal', 'notes'
     ];
 
     public function order() {

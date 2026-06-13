@@ -43,6 +43,7 @@ class Checkout extends Component
 
             $orderItemsData[] = [
                 'menu_id' => $menu->id,
+                'menu_name' => $menu->name,
                 'quantity' => $quantity,
                 'price' => $menu->price,
                 'subtotal' => $subtotal,
