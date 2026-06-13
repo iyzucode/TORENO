@@ -72,6 +72,7 @@
                                     <a href="{{ url('/t/' . $table->qr_code_hash) }}" target="_blank" class="text-blue-600 hover:underline">/t/{{ $table->qr_code_hash }}</a>
                                 </td>
                                 <td class="px-4 py-3 flex space-x-2 justify-center">
+                                    <button onclick="generateAndDownloadQR('{{ url('/t/' . $table->qr_code_hash) }}', 'Meja-{{ $table->table_number }}')" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded shadow-sm text-sm" title="Download QR Code">QR Code</button>
                                     <button wire:click="edit('{{ $table->id }}')" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-3 rounded shadow-sm text-sm">Edit</button>
                                     <button wire:click="delete('{{ $table->id }}')" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded shadow-sm text-sm">Hapus</button>
                                 </td>
@@ -88,4 +89,35 @@
             </div>
         </div>
     </div>
+
+    <!-- QRious Library for QR Code Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script>
+        function generateAndDownloadQR(url, tableName) {
+            // Clean up the table name to be safe for filename
+            const cleanName = tableName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            
+            // Create a temporary canvas
+            const canvas = document.createElement('canvas');
+            
+            // Generate QR Code
+            new QRious({
+                element: canvas,
+                value: url,
+                size: 800, // High resolution for printing
+                level: 'H', // High error correction
+                padding: 40 // Add some padding around the QR code
+            });
+            
+            // Create a temporary link to download
+            const link = document.createElement('a');
+            link.download = `qrcode_${cleanName}.png`;
+            link.href = canvas.toDataURL('image/png');
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </div>
