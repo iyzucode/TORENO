@@ -38,7 +38,7 @@
                                 <span>Rp {{ number_format($order->subtotal ?? $order->total_amount, 0, ',', '.') }}</span>
                             </div>
                             <div class="flex justify-between items-center text-gray-500">
-                                <span>Pajak ({{ $order->tax_rate }}%):</span>
+                                <span>Pajak ({{ floatval($order->tax_rate) }}%):</span>
                                 <span>Rp {{ number_format($order->tax_amount, 0, ',', '.') }}</span>
                             </div>
                             <div class="flex justify-between items-center text-gray-500">

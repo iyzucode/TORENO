@@ -11,6 +11,21 @@ Route::get('/order/{order_id}', \App\Livewire\Customer\OrderTracking::class)->na
 
 Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
 
+Route::get('/download-image', function (\Illuminate\Http\Request $request) {
+    $url = $request->query('url');
+    if (!$url) return abort(400);
+    
+    $response = \Illuminate\Support\Facades\Http::get($url);
+    if ($response->successful()) {
+        $filename = $request->query('name', 'QRIS-' . now()->format('YmdHi')) . '.png';
+        return response($response->body())
+            ->header('Content-Type', $response->header('Content-Type') ?? 'image/png')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+    }
+    
+    return abort(404, 'Gambar tidak ditemukan');
+})->name('download.image');
+
 Route::view('/', 'welcome');
 
 Route::middleware(['auth', 'verified'])->group(function () {

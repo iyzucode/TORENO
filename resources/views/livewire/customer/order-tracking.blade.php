@@ -34,12 +34,17 @@
                     
                     @if($order->snap_token)
                         <div class="bg-white p-4 rounded-3xl shadow-md border-2 border-dashed border-gray-200 inline-block mx-auto mb-4 relative group">
-                            <div class="absolute inset-0 bg-white/40 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl z-10 cursor-pointer">
+                            <div class="absolute inset-0 bg-white/40 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl z-10 cursor-pointer" onclick="window.location.href='{{ route('download.image', ['url' => $order->snap_token, 'name' => 'QRIS-' . ($order->order_code ?? substr($order->id, 0, 8))]) }}'">
                                 <svg class="w-8 h-8 text-toreno-brown mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                                 <span class="text-sm font-bold text-toreno-brown">Simpan QRIS</span>
                             </div>
                             <img src="{{ $order->snap_token }}" alt="QRIS Payment" class="w-64 h-64 object-contain mx-auto">
                         </div>
+
+                        <a href="{{ route('download.image', ['url' => $order->snap_token, 'name' => 'QRIS-' . ($order->order_code ?? substr($order->id, 0, 8))]) }}" class="mb-4 bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-2.5 px-4 rounded-xl shadow-md transition active:scale-95 flex justify-center items-center max-w-xs mx-auto">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download QRIS
+                        </a>
 
                         @if(app()->environment('local') || app()->environment('development'))
                             <div class="mb-4 bg-gray-50 border border-gray-200 p-3 rounded-xl max-w-sm mx-auto flex items-center">
@@ -94,7 +99,7 @@
                 <span>Rp {{ number_format($order->subtotal ?? $order->total_amount, 0, ',', '.') }}</span>
             </div>
             <div class="flex justify-between items-center text-gray-500">
-                <span>Pajak ({{ $order->tax_rate }}%)</span>
+                <span>Pajak ({{ floatval($order->tax_rate) }}%)</span>
                 <span>Rp {{ number_format($order->tax_amount, 0, ',', '.') }}</span>
             </div>
             <div class="flex justify-between items-center text-gray-500">
