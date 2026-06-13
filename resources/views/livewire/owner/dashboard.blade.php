@@ -154,7 +154,10 @@
                                 <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-xs font-bold">{{ $order->table ? $order->table->table_number : '-' }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-800">
-                                {{ $order->customer_name ?: 'Tidak Diketahui' }}
+                                <div>{{ $order->customer_name ?: 'Tidak Diketahui' }}</div>
+                                @if($order->customer_phone)
+                                    <div class="text-xs text-gray-500 font-normal mt-0.5">{{ $order->customer_phone }}</div>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 py-1 bg-indigo-50 text-indigo-700 rounded text-xs font-semibold uppercase tracking-wider border border-indigo-100">

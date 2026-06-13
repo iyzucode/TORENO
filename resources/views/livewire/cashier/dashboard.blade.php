@@ -66,7 +66,7 @@
                     <tbody class="divide-y divide-gray-100">
                         @forelse($cookingOrders as $order)
                             <tr class="hover:bg-gray-50 transition">
-                                <td class="px-6 py-4 text-gray-500">#{{ substr($order->id, 0, 8) }}</td>
+                                <td class="px-6 py-4 text-gray-500">#{{ $order->order_code ?? substr($order->id, 0, 8) }}</td>
                                 <td class="px-6 py-4 font-bold text-toreno-brown">{{ $order->table->table_number ?? '-' }}</td>
                                 <td class="px-6 py-4 font-medium text-gray-800">{{ $order->customer_name }}</td>
                                 <td class="px-6 py-4 font-medium text-toreno-accent">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>

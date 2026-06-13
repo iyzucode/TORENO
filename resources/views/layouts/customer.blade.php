@@ -42,7 +42,9 @@
                 </div>
 
                 <!-- Bottom Navigation for Customer (Liquid Glass Floating Pill) -->
-                <livewire:customer.navbar />
+                @if(!isset($hideNavbar) || !$hideNavbar)
+                    <livewire:customer.navbar />
+                @endif
                 
             </div>
         </div>

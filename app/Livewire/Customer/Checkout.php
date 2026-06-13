@@ -10,11 +10,13 @@ use Livewire\Component;
 class Checkout extends Component
 {
     public $customer_name;
+    public $customer_phone;
 
     public function processCheckout($cartData)
     {
         $this->validate([
             'customer_name' => 'required|min:3',
+            'customer_phone' => 'required|min:9|max:15',
         ]);
 
         if (!session()->has('table_id')) {
@@ -56,9 +58,15 @@ class Checkout extends Component
             return;
         }
 
+        $phonePart = substr($this->customer_phone, -4);
+        $datePart = now()->format('YmdHi');
+        $orderCode = $phonePart . $datePart;
+
         $order = Order::create([
+            'order_code' => $orderCode,
             'table_id' => session('table_id'),
             'customer_name' => $this->customer_name,
+            'customer_phone' => $this->customer_phone,
             'total_amount' => $total,
             'status' => 'pending',
             'payment_method' => 'cash',

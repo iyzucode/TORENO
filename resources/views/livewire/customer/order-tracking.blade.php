@@ -1,7 +1,7 @@
 <div wire:poll.10s>
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-toreno-brown">Status Pesanan</h1>
-        <p class="text-gray-600 text-sm">ID: #{{ substr($order->id, 0, 8) }}</p>
+        <p class="text-gray-600 text-sm">ID: #{{ $order->order_code ?? substr($order->id, 0, 8) }}</p>
     </div>
 
     <!-- Status Tracking -->
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-24">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
         <h3 class="font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Rincian Pesanan</h3>
         
         <div class="flex justify-between text-sm mb-4">
@@ -63,4 +63,17 @@
             <span class="text-toreno-brown">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
         </div>
     </div>
+
+    <!-- Script to clear cart from local storage since the order is placed -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            localStorage.removeItem('toreno_cart');
+            if (window.Alpine) {
+                // If Alpine is already loaded, try to clear the store too
+                try {
+                    Alpine.store('cart').clear();
+                } catch (e) {}
+            }
+        });
+    </script>
 </div>

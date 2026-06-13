@@ -18,6 +18,7 @@ class OrderTracking extends Component
     {
         // Refresh the order to get the latest status when polling
         $this->order->refresh();
-        return view('livewire.customer.order-tracking')->layout('layouts.customer');
+        return view('livewire.customer.order-tracking')
+            ->layout('layouts.customer', ['hideNavbar' => true]);
     }
 }

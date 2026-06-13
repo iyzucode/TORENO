@@ -20,10 +20,15 @@
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
         <h3 class="font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Data Pemesan</h3>
-        <div class="mb-2">
-            <label for="customer_name" class="block text-gray-700 text-xs font-bold mb-2">Nama Anda:</label>
+        <div class="mb-4">
+            <label for="customer_name" class="block text-gray-700 text-xs font-bold mb-2">Nama Anda: <span class="text-red-500">*</span></label>
             <input type="text" id="customer_name" wire:model="customer_name" placeholder="Masukkan nama Anda" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4">
             @error('customer_name') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+        </div>
+        <div class="mb-2">
+            <label for="customer_phone" class="block text-gray-700 text-xs font-bold mb-2">Nomor Handphone (WhatsApp): <span class="text-red-500">*</span></label>
+            <input type="tel" id="customer_phone" wire:model="customer_phone" placeholder="Contoh: 08123456789" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4">
+            @error('customer_phone') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
         </div>
     </div>
 
