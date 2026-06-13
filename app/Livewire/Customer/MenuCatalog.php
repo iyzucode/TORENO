@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Livewire\Customer;
+
+use App\Models\Menu;
+use Livewire\Component;
+
+class MenuCatalog extends Component
+{
+    public function mount($qr_hash = null)
+    {
+        if ($qr_hash) {
+            $table = \App\Models\Table::where('qr_code_hash', $qr_hash)->first();
+            if ($table) {
+                session([
+                    'table_id' => $table->id, 
+                    'table_number' => $table->table_number
+                ]);
+            } else {
+                abort(404, 'Meja tidak valid atau tidak ditemukan.');
+            }
+        }
+    }
+
+    public function render()
+    {
+        $menusByCategory = Menu::where('is_available', true)
+            ->get()
+            ->groupBy('category');
+
+        return view('livewire.customer.menu-catalog', [
+            'menusByCategory' => $menusByCategory,
+        ])->layout('layouts.customer');
+    }
+}
