@@ -5,6 +5,7 @@ namespace App\Livewire\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Menu;
+use App\Models\PromoCode;
 use Livewire\Component;
 
 class Checkout extends Component
@@ -13,8 +14,87 @@ class Checkout extends Component
     public $customer_phone;
 
     public $payment_method = 'qris';
+    public $promoCodeInput = '';
+    public $appliedPromoCode = null;
+    public $discountAmount = 0;
+    public $appliedPromoId = null;
 
-    public function processCheckout($cartData, $frontendSubtotal = 0, $frontendTaxAmount = 0, $frontendServiceChargeAmount = 0, $frontendTotalAmount = 0)
+    public function applyPromoCode($subtotalAmount)
+    {
+        $this->resetErrorBag('promo_code');
+        session()->forget('promo_success');
+
+        if (empty($this->promoCodeInput)) {
+            $this->addError('promo_code', 'Silakan masukkan kode promo.');
+            return;
+        }
+
+        $promo = PromoCode::where('code', strtoupper($this->promoCodeInput))->first();
+
+        if (!$promo) {
+            $this->addError('promo_code', 'Kode promo tidak ditemukan.');
+            return;
+        }
+
+        if (!$promo->is_active) {
+            $this->addError('promo_code', 'Kode promo sudah tidak aktif.');
+            return;
+        }
+
+        if ($promo->start_date && now()->lt($promo->start_date)) {
+            $this->addError('promo_code', 'Kode promo belum bisa digunakan.');
+            return;
+        }
+
+        if ($promo->end_date && now()->gt($promo->end_date)) {
+            $this->addError('promo_code', 'Masa berlaku kode promo sudah habis.');
+            return;
+        }
+
+        if ($promo->usage_limit && $promo->used_count >= $promo->usage_limit) {
+            $this->addError('promo_code', 'Batas penggunaan kupon sudah habis.');
+            return;
+        }
+
+        if ($subtotalAmount < $promo->min_purchase) {
+            $this->addError('promo_code', 'Minimum belanja untuk kupon ini adalah Rp ' . number_format($promo->min_purchase, 0, ',', '.'));
+            return;
+        }
+
+        // Hitung diskon
+        $discount = 0;
+        if ($promo->type === 'percentage') {
+            $discount = $subtotalAmount * ($promo->value / 100);
+            if ($promo->max_discount && $discount > $promo->max_discount) {
+                $discount = $promo->max_discount;
+            }
+        } else {
+            $discount = $promo->value;
+        }
+
+        // Diskon tidak boleh melebihi subtotal
+        if ($discount > $subtotalAmount) {
+            $discount = $subtotalAmount;
+        }
+
+        $this->appliedPromoCode = $promo->code;
+        $this->appliedPromoId = $promo->id;
+        $this->discountAmount = $discount;
+        
+        session()->flash('promo_success', 'Kupon diskon berhasil diterapkan!');
+    }
+
+    public function removePromoCode()
+    {
+        $this->promoCodeInput = '';
+        $this->appliedPromoCode = null;
+        $this->appliedPromoId = null;
+        $this->discountAmount = 0;
+        $this->resetErrorBag('promo_code');
+        session()->forget('promo_success');
+    }
+
+    public function processCheckout($cartData, $frontendSubtotal = 0, $frontendTaxAmount = 0, $frontendServiceChargeAmount = 0, $frontendTotalAmount = 0, $frontendDiscountAmount = 0)
     {
         $this->validate([
             'customer_name' => 'required|min:3',
@@ -65,22 +145,51 @@ class Checkout extends Component
         $serviceChargeType = \App\Models\Setting::getVal('service_charge_type', 'percentage');
         $serviceChargeRate = (float)\App\Models\Setting::getVal('service_charge_rate', 0);
         
-        $backendTaxAmount = $backendSubtotal * ($taxRate / 100);
+        // Cek promo lagi di backend untuk validasi akhir
+        $backendDiscountAmount = 0;
+        $backendPromoId = null;
+        
+        if ($this->appliedPromoCode) {
+            $promo = PromoCode::where('code', $this->appliedPromoCode)->first();
+            if ($promo && $promo->is_active && $backendSubtotal >= $promo->min_purchase) {
+                $backendPromoId = $promo->id;
+                if ($promo->type === 'percentage') {
+                    $backendDiscountAmount = $backendSubtotal * ($promo->value / 100);
+                    if ($promo->max_discount && $backendDiscountAmount > $promo->max_discount) {
+                        $backendDiscountAmount = $promo->max_discount;
+                    }
+                } else {
+                    $backendDiscountAmount = $promo->value;
+                }
+                
+                if ($backendDiscountAmount > $backendSubtotal) {
+                    $backendDiscountAmount = $backendSubtotal;
+                }
+                
+                // Increase used_count
+                $promo->increment('used_count');
+            }
+        }
+
+        $netSubtotal = max(0, $backendSubtotal - $backendDiscountAmount);
+
+        $backendTaxAmount = $netSubtotal * ($taxRate / 100);
         
         $backendServiceChargeAmount = $serviceChargeType === 'fixed' 
             ? $serviceChargeRate 
-            : $backendSubtotal * ($serviceChargeRate / 100);
+            : $netSubtotal * ($serviceChargeRate / 100);
             
-        $backendGrandTotal = $backendSubtotal + $backendTaxAmount + $backendServiceChargeAmount;
+        $backendGrandTotal = $netSubtotal + $backendTaxAmount + $backendServiceChargeAmount;
 
         // Validasi strict: cocokkan hitungan backend dengan frontend
         if (
             abs($backendSubtotal - (float)$frontendSubtotal) > 0.1 ||
             abs($backendTaxAmount - (float)$frontendTaxAmount) > 0.1 ||
             abs($backendServiceChargeAmount - (float)$frontendServiceChargeAmount) > 0.1 ||
-            abs($backendGrandTotal - (float)$frontendTotalAmount) > 0.1
+            abs($backendGrandTotal - (float)$frontendTotalAmount) > 0.1 ||
+            abs($backendDiscountAmount - (float)$frontendDiscountAmount) > 0.1
         ) {
-            $this->addError('cart', 'Terjadi perubahan harga menu atau biaya pada sistem. Silakan refresh halaman keranjang Anda.');
+            $this->addError('cart', 'Terjadi perubahan harga atau kupon tidak valid. Silakan refresh keranjang Anda.');
             return;
         }
 
@@ -93,6 +202,8 @@ class Checkout extends Component
             'table_id' => session('table_id'),
             'customer_name' => $this->customer_name,
             'customer_phone' => $this->customer_phone,
+            'promo_code_id' => $backendPromoId,
+            'discount_amount' => $backendDiscountAmount,
             'subtotal' => $backendSubtotal,
             'tax_rate' => $taxRate,
             'tax_amount' => $backendTaxAmount,

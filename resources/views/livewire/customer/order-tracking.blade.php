@@ -93,11 +93,17 @@
             @endif
         @endforeach
         
-        <div class="space-y-2 mt-4 pt-4 border-t border-gray-100 text-sm">
+        <div class="space-y-3 mt-6 pt-5 border-t border-gray-100 text-sm">
             <div class="flex justify-between items-center text-gray-500">
                 <span>Subtotal</span>
                 <span>Rp {{ number_format($order->subtotal ?? $order->total_amount, 0, ',', '.') }}</span>
             </div>
+            @if(isset($order->discount_amount) && $order->discount_amount > 0)
+            <div class="flex justify-between items-center text-green-600 font-medium">
+                <span>Diskon ({{ $order->promoCode->code ?? 'Promo' }})</span>
+                <span>- Rp {{ number_format($order->discount_amount, 0, ',', '.') }}</span>
+            </div>
+            @endif
             <div class="flex justify-between items-center text-gray-500">
                 <span>Pajak ({{ floatval($order->tax_rate) }}%)</span>
                 <span>Rp {{ number_format($order->tax_amount, 0, ',', '.') }}</span>
@@ -171,6 +177,12 @@
                 <span>Subtotal</span>
                 <span>Rp {{ number_format($order->subtotal ?? $order->total_amount, 0, ',', '.') }}</span>
             </div>
+            @if(isset($order->discount_amount) && $order->discount_amount > 0)
+            <div class="flex justify-between text-gray-600 mb-1 font-semibold relative z-10">
+                <span>Diskon ({{ $order->promoCode->code ?? 'Promo' }})</span>
+                <span>- Rp {{ number_format($order->discount_amount, 0, ',', '.') }}</span>
+            </div>
+            @endif
             <div class="flex justify-between text-gray-600 mb-1 font-semibold relative z-10">
                 <span>Pajak ({{ floatval($order->tax_rate) }}%)</span>
                 <span>Rp {{ number_format($order->tax_amount, 0, ',', '.') }}</span>

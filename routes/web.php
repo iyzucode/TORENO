@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/categories', \App\Livewire\Admin\CategoryManagement::class)->name('categories');
         Route::get('/tables', \App\Livewire\Admin\TableManagement::class)->name('tables');
         Route::get('/promotions', \App\Livewire\Admin\PromotionManagement::class)->name('promotions');
+        Route::get('/promo-codes', \App\Livewire\Admin\PromoCodeManagement::class)->name('promo_codes');
         Route::get('/settings', \App\Livewire\Admin\Settings::class)->name('settings');
     });
 

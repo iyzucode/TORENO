@@ -41,7 +41,10 @@ new class extends Component
                         {{ __('Kategori') }}
                     </x-nav-link>
                     <x-nav-link :href="route('admin.promotions')" :active="request()->routeIs('admin.promotions')" wire:navigate>
-                        {{ __('Promosi') }}
+                        {{ __('Slider Promosi') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.promo_codes')" :active="request()->routeIs('admin.promo_codes')" wire:navigate>
+                        {{ __('Kupon Diskon') }}
                     </x-nav-link>
                     <x-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
                         {{ __('Meja') }}
@@ -109,7 +112,10 @@ new class extends Component
                 {{ __('Kategori') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.promotions')" :active="request()->routeIs('admin.promotions')" wire:navigate>
-                {{ __('Promosi') }}
+                {{ __('Slider Promosi') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.promo_codes')" :active="request()->routeIs('admin.promo_codes')" wire:navigate>
+                {{ __('Kupon Diskon') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
                 {{ __('Meja') }}

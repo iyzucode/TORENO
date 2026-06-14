@@ -129,6 +129,19 @@
                         return Object.values(this.items).reduce((count, item) => count + item.quantity, 0);
                     },
 
+                    discountAmount: 0,
+                    appliedPromoCode: null,
+
+                    setPromo(code, amount) {
+                        this.appliedPromoCode = code;
+                        this.discountAmount = amount;
+                    },
+
+                    clearPromo() {
+                        this.appliedPromoCode = null;
+                        this.discountAmount = 0;
+                    },
+
                     taxRate: {{ (float)\App\Models\Setting::getVal('tax_rate', 0) }},
                     serviceChargeType: '{{ \App\Models\Setting::getVal('service_charge_type', 'percentage') }}',
                     serviceChargeRate: {{ (float)\App\Models\Setting::getVal('service_charge_rate', 0) }},
@@ -137,19 +150,24 @@
                         return Object.values(this.items).reduce((total, item) => total + (item.price * item.quantity), 0);
                     },
 
+                    get netSubtotal() {
+                        let net = this.subtotalAmount - this.discountAmount;
+                        return net > 0 ? net : 0;
+                    },
+
                     get taxAmount() {
-                        return this.subtotalAmount * (this.taxRate / 100);
+                        return this.netSubtotal * (this.taxRate / 100);
                     },
 
                     get serviceChargeAmount() {
                         if (this.serviceChargeType === 'fixed') {
                             return this.serviceChargeRate;
                         }
-                        return this.subtotalAmount * (this.serviceChargeRate / 100);
+                        return this.netSubtotal * (this.serviceChargeRate / 100);
                     },
 
                     get totalAmount() {
-                        return this.subtotalAmount + this.taxAmount + this.serviceChargeAmount;
+                        return this.netSubtotal + this.taxAmount + this.serviceChargeAmount;
                     },
                     
                     clear() {

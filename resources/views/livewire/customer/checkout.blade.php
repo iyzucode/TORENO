@@ -65,6 +65,26 @@
         </div>
     </div>
 
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
+        <h3 class="font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Kupon Diskon</h3>
+        <div class="flex items-center gap-2">
+            <input type="text" wire:model="promoCodeInput" x-bind:disabled="$store.cart.appliedPromoCode" placeholder="Masukkan kode promo..." class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4 uppercase">
+            <button type="button" x-show="!$store.cart.appliedPromoCode" wire:click="applyPromoCode($store.cart.subtotalAmount)" wire:loading.attr="disabled" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-5 rounded-xl shadow-sm transition active:scale-95 text-sm whitespace-nowrap">
+                Gunakan
+            </button>
+            <button type="button" x-show="$store.cart.appliedPromoCode" @click="$store.cart.clearPromo(); $wire.removePromoCode()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-5 rounded-xl shadow-sm transition active:scale-95 text-sm whitespace-nowrap">
+                Hapus
+            </button>
+        </div>
+        @error('promo_code') <span class="text-red-500 text-xs mt-2 block">{{ $message }}</span> @enderror
+        @if(session()->has('promo_success'))
+            <span class="text-green-600 text-xs mt-2 block font-medium">{{ session('promo_success') }}</span>
+        @endif
+        
+        <!-- Livewire to Alpine Bridge for Promo -->
+        <div x-effect="if($wire.discountAmount > 0 && $wire.appliedPromoCode) { $store.cart.setPromo($wire.appliedPromoCode, $wire.discountAmount); } else { $store.cart.clearPromo(); }"></div>
+    </div>
+
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-24">
         <h3 class="font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Rincian Pesanan</h3>
         
@@ -85,6 +105,12 @@
                 <span>Subtotal</span>
                 <span x-text="'Rp ' + $store.cart.subtotalAmount.toLocaleString('id-ID')"></span>
             </div>
+            <template x-if="$store.cart.discountAmount > 0">
+                <div class="flex justify-between items-center text-green-600 font-medium">
+                    <span x-text="'Diskon (' + $store.cart.appliedPromoCode + ')'"></span>
+                    <span x-text="'- Rp ' + $store.cart.discountAmount.toLocaleString('id-ID')"></span>
+                </div>
+            </template>
             <div class="flex justify-between items-center text-gray-500">
                 <span x-text="'Pajak (' + $store.cart.taxRate + '%)'"></span>
                 <span x-text="'Rp ' + $store.cart.taxAmount.toLocaleString('id-ID')"></span>
@@ -112,7 +138,7 @@
             </div>
         </template>
 
-        <button @click="$wire.processCheckout(Object.values($store.cart.items), $store.cart.subtotalAmount, $store.cart.taxAmount, $store.cart.serviceChargeAmount, $store.cart.totalAmount)" wire:loading.attr="disabled" class="w-full mt-6 bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center">
+        <button @click="$wire.processCheckout(Object.values($store.cart.items), $store.cart.subtotalAmount, $store.cart.taxAmount, $store.cart.serviceChargeAmount, $store.cart.totalAmount, $store.cart.discountAmount)" wire:loading.attr="disabled" class="w-full mt-6 bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center">
             <span wire:loading.remove>Konfirmasi Pesanan</span>
             <span wire:loading>Memproses...</span>
         </button>

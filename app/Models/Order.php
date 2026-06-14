@@ -10,7 +10,7 @@ class Order extends Model
     use HasUuids;
 
     protected $fillable = [
-        'order_code', 'table_id', 'customer_name', 'customer_phone', 'status', 'payment_status', 'payment_method', 'snap_token', 'subtotal', 'tax_rate', 'tax_amount', 'service_charge_type', 'service_charge_rate', 'service_charge_amount', 'total_amount', 'notes'
+        'order_code', 'table_id', 'customer_name', 'customer_phone', 'status', 'payment_status', 'payment_method', 'snap_token', 'promo_code_id', 'discount_amount', 'subtotal', 'tax_rate', 'tax_amount', 'service_charge_type', 'service_charge_rate', 'service_charge_amount', 'total_amount', 'notes'
     ];
 
     public function table() {
@@ -19,5 +19,9 @@ class Order extends Model
 
     public function items() {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function promoCode() {
+        return $this->belongsTo(PromoCode::class);
     }
 }
