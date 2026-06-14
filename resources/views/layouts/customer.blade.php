@@ -126,7 +126,7 @@
                     },
 
                     get totalCount() {
-                        return Object.keys(this.items).length;
+                        return Object.values(this.items).reduce((count, item) => count + item.quantity, 0);
                     },
 
                     taxRate: {{ (float)\App\Models\Setting::getVal('tax_rate', 0) }},
