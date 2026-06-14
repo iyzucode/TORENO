@@ -26,8 +26,10 @@ class MenuCatalog extends Component
     public function render()
     {
         $menusByCategory = Menu::where('is_available', true)
+            ->with('category')
             ->get()
-            ->groupBy('category');
+            ->sortBy(fn($menu) => $menu->category->sort_order ?? 999)
+            ->groupBy(fn($menu) => $menu->category->name ?? 'Lainnya');
 
         return view('livewire.customer.menu-catalog', [
             'menusByCategory' => $menusByCategory,

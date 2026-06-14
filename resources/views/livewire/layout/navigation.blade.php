@@ -37,6 +37,9 @@ new class extends Component
                     <x-nav-link :href="route('admin.menus')" :active="request()->routeIs('admin.menus')" wire:navigate>
                         {{ __('Menu') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.categories')" :active="request()->routeIs('admin.categories')" wire:navigate>
+                        {{ __('Kategori') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
                         {{ __('Meja') }}
                     </x-nav-link>
@@ -98,6 +101,9 @@ new class extends Component
             @if(auth()->user()->role === 'admin')
             <x-responsive-nav-link :href="route('admin.menus')" :active="request()->routeIs('admin.menus')" wire:navigate>
                 {{ __('Menu') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.categories')" :active="request()->routeIs('admin.categories')" wire:navigate>
+                {{ __('Kategori') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
                 {{ __('Meja') }}

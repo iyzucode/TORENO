@@ -20,9 +20,14 @@
                             @error('description') <span class="text-red-500 text-xs mt-1">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-4">
-                            <label for="category" class="block text-gray-700 text-sm font-bold mb-2">Kategori:</label>
-                            <input type="text" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-md w-full" id="category" placeholder="Contoh: Makanan / Minuman" wire:model="category">
-                            @error('category') <span class="text-red-500 text-xs mt-1">{{ $message }}</span>@enderror
+                            <label for="category_id" class="block text-gray-700 text-sm font-bold mb-2">Kategori:</label>
+                            <select class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-md w-full" id="category_id" wire:model="category_id">
+                                <option value="">-- Pilih Kategori --</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('category_id') <span class="text-red-500 text-xs mt-1">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-4">
                             <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Harga (Rp):</label>

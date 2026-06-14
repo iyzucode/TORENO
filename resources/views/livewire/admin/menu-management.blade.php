@@ -37,7 +37,7 @@
                             @foreach($menus as $menu)
                             <tr wire:key="admin-menu-{{ $menu->id }}" class="border-b hover:bg-gray-50">
                                 <td class="px-4 py-3">{{ $menu->name }}</td>
-                                <td class="px-4 py-3">{{ $menu->category }}</td>
+                                <td class="px-4 py-3">{{ $menu->category->name ?? '-' }}</td>
                                 <td class="px-4 py-3">Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
                                 <td class="px-4 py-3 text-center">
                                     <button wire:click="toggleAvailability('{{ $menu->id }}')" class="px-3 py-1 rounded-full text-xs font-bold {{ $menu->is_available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">

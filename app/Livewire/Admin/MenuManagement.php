@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Menu;
+use App\Models\MenuCategory;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -10,7 +11,7 @@ class MenuManagement extends Component
 {
     use WithFileUploads;
 
-    public $name, $description, $price, $category, $image;
+    public $name, $description, $price, $category_id, $image;
     public $is_available = true;
     public $menu_id;
     public $isModalOpen = false;
@@ -18,7 +19,8 @@ class MenuManagement extends Component
     public function render()
     {
         return view('livewire.admin.menu-management', [
-            'menus' => Menu::all()
+            'menus' => Menu::with('category')->get(),
+            'categories' => MenuCategory::orderBy('sort_order')->get(),
         ])->layout('layouts.app');
     }
 
@@ -43,7 +45,7 @@ class MenuManagement extends Component
         $this->name = '';
         $this->description = '';
         $this->price = '';
-        $this->category = '';
+        $this->category_id = '';
         $this->image = null;
         $this->is_available = true;
         $this->menu_id = '';
@@ -54,7 +56,7 @@ class MenuManagement extends Component
         $this->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'category' => 'required',
+            'category_id' => 'required|exists:menu_categories,id',
             'image' => 'nullable|image|max:2048',
         ]);
 
@@ -69,7 +71,7 @@ class MenuManagement extends Component
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
-            'category' => $this->category,
+            'category_id' => $this->category_id,
             'is_available' => $this->is_available,
             'image_url' => $imagePath ?: ($this->menu_id ? Menu::find($this->menu_id)->image_url : null),
         ]);
@@ -87,7 +89,7 @@ class MenuManagement extends Component
         $this->name = $menu->name;
         $this->description = $menu->description;
         $this->price = $menu->price;
-        $this->category = $menu->category;
+        $this->category_id = $menu->category_id;
         $this->is_available = $menu->is_available;
     
         $this->openModal();
