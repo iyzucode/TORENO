@@ -18,8 +18,14 @@ class MenuManagement extends Component
 
     public function render()
     {
+        $menusByCategory = Menu::with('category')
+            ->orderBy('sort_order')
+            ->get()
+            ->sortBy(fn($menu) => $menu->category->sort_order ?? 999)
+            ->groupBy(fn($menu) => $menu->category->name ?? 'Tanpa Kategori');
+
         return view('livewire.admin.menu-management', [
-            'menus' => Menu::with('category')->get(),
+            'menusByCategory' => $menusByCategory,
             'categories' => MenuCategory::orderBy('sort_order')->get(),
         ])->layout('layouts.app');
     }
@@ -67,16 +73,33 @@ class MenuManagement extends Component
             ])['secure_url'];
         }
 
-        Menu::updateOrCreate(['id' => $this->menu_id ?: null], [
-            'name' => $this->name,
-            'description' => $this->description,
-            'price' => $this->price,
-            'category_id' => $this->category_id,
-            'is_available' => $this->is_available,
-            'image_url' => $imagePath ?: ($this->menu_id ? Menu::find($this->menu_id)->image_url : null),
-        ]);
-
-        session()->flash('message', $this->menu_id ? 'Menu Diperbarui.' : 'Menu Ditambahkan.');
+        if ($this->menu_id) {
+            $menu = Menu::find($this->menu_id);
+            if ($imagePath) {
+                // Delete old image if needed (Cloudinary doesn't need manual deletion for now)
+            }
+            $menu->update([
+                'name' => $this->name,
+                'description' => $this->description,
+                'price' => $this->price,
+                'category_id' => $this->category_id,
+                'is_available' => $this->is_available,
+                'image_url' => $imagePath ?: $menu->image_url,
+            ]);
+            session()->flash('message', 'Menu berhasil diperbarui.');
+        } else {
+            $maxOrder = Menu::where('category_id', $this->category_id)->max('sort_order') ?? -1;
+            Menu::create([
+                'name' => $this->name,
+                'description' => $this->description,
+                'price' => $this->price,
+                'category_id' => $this->category_id,
+                'is_available' => $this->is_available,
+                'image_url' => $imagePath,
+                'sort_order' => $maxOrder + 1,
+            ]);
+            session()->flash('message', 'Menu berhasil ditambahkan.');
+        }
 
         $this->closeModal();
         $this->resetInputFields();
@@ -106,5 +129,12 @@ class MenuManagement extends Component
         $menu = Menu::find($id);
         $menu->is_available = !$menu->is_available;
         $menu->save();
+    }
+
+    public function updateMenuOrder($orderedIds)
+    {
+        foreach ($orderedIds as $index => $id) {
+            Menu::where('id', $id)->update(['sort_order' => $index]);
+        }
     }
 }

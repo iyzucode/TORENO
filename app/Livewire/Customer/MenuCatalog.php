@@ -27,6 +27,7 @@ class MenuCatalog extends Component
     {
         $menusByCategory = Menu::where('is_available', true)
             ->with('category')
+            ->orderBy('sort_order')
             ->get()
             ->sortBy(fn($menu) => $menu->category->sort_order ?? 999)
             ->groupBy(fn($menu) => $menu->category->name ?? 'Lainnya');

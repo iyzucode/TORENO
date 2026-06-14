@@ -10,7 +10,7 @@ class Menu extends Model
     use HasUuids;
 
     protected $fillable = [
-        'name', 'description', 'price', 'image_url', 'category_id', 'is_available'
+        'name', 'description', 'price', 'image_url', 'category_id', 'is_available', 'sort_order'
     ];
 
     public function category()
