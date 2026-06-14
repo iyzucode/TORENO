@@ -3,6 +3,7 @@
 namespace App\Livewire\Customer;
 
 use App\Models\Menu;
+use App\Models\Promotion;
 use Livewire\Component;
 
 class MenuCatalog extends Component
@@ -32,8 +33,11 @@ class MenuCatalog extends Component
             ->sortBy(fn($menu) => $menu->category->sort_order ?? 999)
             ->groupBy(fn($menu) => $menu->category->name ?? 'Lainnya');
 
+        $promotions = Promotion::where('is_active', true)->orderBy('sort_order')->get();
+
         return view('livewire.customer.menu-catalog', [
             'menusByCategory' => $menusByCategory,
+            'promotions' => $promotions,
         ])->layout('layouts.customer');
     }
 }

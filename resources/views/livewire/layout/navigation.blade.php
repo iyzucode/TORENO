@@ -40,6 +40,9 @@ new class extends Component
                     <x-nav-link :href="route('admin.categories')" :active="request()->routeIs('admin.categories')" wire:navigate>
                         {{ __('Kategori') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.promotions')" :active="request()->routeIs('admin.promotions')" wire:navigate>
+                        {{ __('Promosi') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
                         {{ __('Meja') }}
                     </x-nav-link>
@@ -104,6 +107,9 @@ new class extends Component
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.categories')" :active="request()->routeIs('admin.categories')" wire:navigate>
                 {{ __('Kategori') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.promotions')" :active="request()->routeIs('admin.promotions')" wire:navigate>
+                {{ __('Promosi') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
                 {{ __('Meja') }}

@@ -45,12 +45,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', \App\Livewire\Owner\Dashboard::class)->name('dashboard');
     });
 
-    // Admin Routes
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
         Route::get('/menus', \App\Livewire\Admin\MenuManagement::class)->name('menus');
         Route::get('/categories', \App\Livewire\Admin\CategoryManagement::class)->name('categories');
         Route::get('/tables', \App\Livewire\Admin\TableManagement::class)->name('tables');
+        Route::get('/promotions', \App\Livewire\Admin\PromotionManagement::class)->name('promotions');
         Route::get('/settings', \App\Livewire\Admin\Settings::class)->name('settings');
     });
 

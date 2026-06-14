@@ -1,18 +1,76 @@
 <div>
-    @php
-        $quotes = [
-            "Mengaduk kopi, mengadu sepi. Berkisah lagi tentang patah hati, semoga pelukanmu kelak akan melengkapi.",
-            "Ketika kopi menjadi sahabat sejati, pagi bukan lagi sebuah misteri. Seperti kamu yang slalu ada di hati, slalu mengisi hari-hari.",
-            "Biji kopi yang sama bisa jadi citarasa kopi lain di tangan yang beda. sama seperti kasih sayang jika di tangan yang beda maka beda pula kisahnya.",
-            "Di secangkir kopi, biarlah aku menjelma menjadi apa saja yang kau inginkan, menjadi pahit ataupun manis asal tetap kau rindukan."
-        ];
-        $randomQuote = $quotes[array_rand($quotes)];
-    @endphp
+    @if($promotions->isNotEmpty())
+        <div class="mb-8 relative rounded-2xl overflow-hidden shadow-sm aspect-video bg-gray-100 touch-pan-y" 
+             x-data="{ 
+                activeSlide: 0, 
+                slides: {{ $promotions->count() }},
+                autoSlideInterval: null,
+                startX: 0,
+                endX: 0,
+                isDragging: false,
+                startAutoSlide() {
+                    this.autoSlideInterval = setInterval(() => { 
+                        this.activeSlide = this.activeSlide === this.slides - 1 ? 0 : this.activeSlide + 1 
+                    }, 4000);
+                },
+                stopAutoSlide() {
+                    clearInterval(this.autoSlideInterval);
+                },
+                handleTouchStart(e) {
+                    this.startX = e.touches ? e.touches[0].clientX : e.clientX;
+                    this.isDragging = true;
+                    this.stopAutoSlide();
+                },
+                handleTouchEnd(e) {
+                    if (!this.isDragging) return;
+                    this.endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+                    this.isDragging = false;
+                    this.handleSwipe();
+                    this.startAutoSlide();
+                },
+                handleSwipe() {
+                    const threshold = 50;
+                    if (this.startX - this.endX > threshold) {
+                        this.activeSlide = this.activeSlide === this.slides - 1 ? 0 : this.activeSlide + 1;
+                    } else if (this.endX - this.startX > threshold) {
+                        this.activeSlide = this.activeSlide === 0 ? this.slides - 1 : this.activeSlide - 1;
+                    }
+                }
+             }" 
+             x-init="startAutoSlide()"
+             @touchstart.passive="handleTouchStart($event)"
+             @touchend.passive="handleTouchEnd($event)"
+             @mousedown="handleTouchStart($event)"
+             @mouseup="handleTouchEnd($event)"
+             @mouseleave="handleTouchEnd($event)">
+            
+            <!-- Slides -->
+            <div class="flex transition-transform duration-500 ease-in-out h-full" 
+                 :style="'transform: translateX(-' + (activeSlide * 100) + '%)'">
+                @foreach($promotions as $promo)
+                    <div class="w-full h-full flex-shrink-0 relative">
+                        <img src="{{ $promo->image_url }}" alt="{{ $promo->title }}" class="w-full h-full object-cover">
+                        @if($promo->title)
+                            <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-4 pt-12">
+                                <h3 class="text-white font-bold text-lg drop-shadow-md">{{ $promo->title }}</h3>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
 
-    <div class="mb-8 bg-white border border-gray-100 p-5 rounded-2xl shadow-sm relative overflow-hidden flex items-start gap-3">
-        <svg class="w-6 h-6 text-toreno-accent/60 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z"/></svg>
-        <p class="text-sm text-gray-500 italic leading-relaxed font-medium">"{{ $randomQuote }}"</p>
-    </div>
+            <!-- Indicators -->
+            @if($promotions->count() > 1)
+            <div class="absolute bottom-3 left-0 right-0 flex justify-center space-x-2 z-10">
+                <template x-for="i in slides" :key="i">
+                    <button @click="activeSlide = i - 1" 
+                            class="w-2 h-2 rounded-full transition-all duration-300"
+                            :class="activeSlide === i - 1 ? 'bg-white w-4' : 'bg-white/50 hover:bg-white/80'"></button>
+                </template>
+            </div>
+            @endif
+        </div>
+    @endif
 
     @foreach($menusByCategory as $category => $menus)
         <div class="mb-8">
