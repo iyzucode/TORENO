@@ -141,7 +141,7 @@
                     <span class="text-gray-800 font-bold">Total Pembayaran</span>
                     <span class="text-xl font-black text-toreno-brown" x-text="'Rp ' + $store.cart.totalAmount.toLocaleString('id-ID')"></span>
                 </div>
-                <a wire:navigate href="{{ route('customer.checkout') }}" class="block w-full bg-toreno-brown hover:bg-toreno-accent text-white text-center font-bold py-3.5 px-4 rounded-xl shadow-md transition text-lg active:scale-95">
+                <a wire:navigate href="{{ route('customer.checkout') }}" class="block w-full bg-toreno-brown hover:bg-toreno-accent text-white text-center font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95">
                     Lanjut Checkout
                 </a>
             </div>

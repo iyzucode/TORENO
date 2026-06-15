@@ -1,7 +1,13 @@
 <div x-data="{ nameError: false, phoneError: false }">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-toreno-brown">Checkout</h1>
-        <p class="text-gray-600 text-sm">Lengkapi data pesanan Anda</p>
+    <div class="mb-6 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-toreno-brown">Checkout</h1>
+            <p class="text-gray-600 text-sm">Lengkapi data pesanan Anda</p>
+        </div>
+        <a wire:navigate href="{{ route('customer.cart') }}" class="text-sm font-bold text-toreno-accent hover:underline flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            Kembali
+        </a>
     </div>
 
     @error('cart')
