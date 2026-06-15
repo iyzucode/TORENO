@@ -40,9 +40,8 @@
                 
                 <!-- Header -->
                 <div class="w-full bg-toreno-brown shadow-md py-4 px-6 sticky top-0 z-40 flex justify-between items-center rounded-b-2xl">
-                    <div class="text-white font-black text-xl tracking-wider flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-toreno-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M2,21V19H20V21H2M20,8V5H18V8H20M20,3A2,2 0 0,1 22,5V8A2,2 0 0,1 20,10H18V13A4,4 0 0,1 14,17H8A4,4 0 0,1 4,13V3H20M16,5H6V13A2,2 0 0,0 8,15H14A2,2 0 0,0 16,13V5Z" /></svg>
-                        TORENO
+                    <div class="flex items-center">
+                        <img src="https://res.cloudinary.com/dtbut0lkj/image/upload/v1781551235/logotoreno-nobg_eeipti.png" alt="Logo TORENO" class="h-8 object-contain">
                     </div>
                     <div class="flex items-center gap-3">
                         <a href="{{ route('customer.history') }}" class="text-white hover:text-toreno-cream transition" aria-label="Riwayat Pesanan" title="Riwayat Pesanan">
