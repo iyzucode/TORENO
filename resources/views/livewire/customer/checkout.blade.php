@@ -1,4 +1,4 @@
-<div x-data>
+<div x-data="{ nameError: false, phoneError: false }">
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-toreno-brown">Checkout</h1>
         <p class="text-gray-600 text-sm">Lengkapi data pesanan Anda</p>
@@ -34,12 +34,14 @@
         <h3 class="font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Data Pemesan</h3>
         <div class="mb-4">
             <label for="customer_name" class="block text-gray-700 text-xs font-bold mb-2">Nama Anda: <span class="text-red-500">*</span></label>
-            <input type="text" id="customer_name" wire:model="customer_name" placeholder="Masukkan nama Anda" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4">
+            <input type="text" id="customer_name" wire:model="customer_name" @input="nameError = false" :class="{ 'border-red-500 bg-red-50': nameError }" placeholder="Masukkan nama Anda" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4 transition-colors">
+            <span x-show="nameError" style="display: none;" class="text-red-500 text-xs mt-1 block">Nama Anda wajib diisi.</span>
             @error('customer_name') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
         </div>
         <div class="mb-4">
             <label for="customer_phone" class="block text-gray-700 text-xs font-bold mb-2">Nomor Handphone: <span class="text-red-500">*</span></label>
-            <input type="tel" id="customer_phone" wire:model="customer_phone" placeholder="Contoh: 08123456789" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4">
+            <input type="tel" id="customer_phone" wire:model="customer_phone" @input="phoneError = false" :class="{ 'border-red-500 bg-red-50': phoneError }" placeholder="Contoh: 08123456789" class="shadow-sm border-gray-300 focus:border-toreno-accent focus:ring focus:ring-toreno-accent focus:ring-opacity-50 rounded-xl w-full text-sm py-3 px-4 transition-colors">
+            <span x-show="phoneError" style="display: none;" class="text-red-500 text-xs mt-1 block">Nomor handphone wajib diisi.</span>
             @error('customer_phone') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
         </div>
         <div class="mb-2">
@@ -138,7 +140,23 @@
             </div>
         </template>
 
-        <button @click="$wire.processCheckout(Object.values($store.cart.items), $store.cart.subtotalAmount, $store.cart.taxAmount, $store.cart.serviceChargeAmount, $store.cart.totalAmount, $store.cart.discountAmount)" wire:loading.attr="disabled" class="w-full mt-6 bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center">
+        <button type="button" @click="
+            let nameInput = document.getElementById('customer_name');
+            let phoneInput = document.getElementById('customer_phone');
+            
+            nameError = !nameInput.value || nameInput.value.trim() === '';
+            phoneError = !phoneInput.value || phoneInput.value.trim() === '';
+
+            if (nameError) {
+                nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => nameInput.focus(), 300);
+            } else if (phoneError) {
+                phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => phoneInput.focus(), 300);
+            } else {
+                $wire.processCheckout(Object.values($store.cart.items), $store.cart.subtotalAmount, $store.cart.taxAmount, $store.cart.serviceChargeAmount, $store.cart.totalAmount, $store.cart.discountAmount);
+            }
+        " wire:loading.attr="disabled" class="w-full mt-6 bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-3 px-4 rounded-xl shadow-md transition active:scale-95 flex items-center justify-center">
             <span wire:loading.remove>Konfirmasi Pesanan</span>
             <span wire:loading>Memproses...</span>
         </button>
