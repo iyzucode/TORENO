@@ -49,6 +49,9 @@ new class extends Component
                     <x-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
                         {{ __('Meja') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.users')" :active="request()->routeIs('admin.users')" wire:navigate>
+                        {{ __('Kelola User') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('admin.settings')" :active="request()->routeIs('admin.settings')" wire:navigate>
                         {{ __('Pengaturan') }}
                     </x-nav-link>
@@ -119,6 +122,9 @@ new class extends Component
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.tables')" :active="request()->routeIs('admin.tables')" wire:navigate>
                 {{ __('Meja') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.users')" :active="request()->routeIs('admin.users')" wire:navigate>
+                {{ __('Kelola User') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.settings')" :active="request()->routeIs('admin.settings')" wire:navigate>
                 {{ __('Pengaturan') }}
