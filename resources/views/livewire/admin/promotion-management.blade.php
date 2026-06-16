@@ -133,7 +133,7 @@
         <!-- Popup Promotion Section -->
         <div class="mt-8 bg-white overflow-hidden shadow-xl sm:rounded-lg border border-toreno-brown/10">
             <div class="p-6 sm:p-8 bg-white border-b border-gray-200">
-                <h3 class="text-lg font-bold text-toreno-brown mb-4 border-b pb-2">Pop-up Promosi (Muncul Pertama Kali)</h3>
+                <h3 class="text-lg font-bold text-toreno-brown mb-4 border-b pb-2">Pop-up Promosi</h3>
                 <p class="text-sm text-gray-500 mb-6">Pop-up ini akan muncul satu kali per sesi saat pelanggan membuka halaman Katalog.</p>
 
                 @if (session()->has('popup_message'))
@@ -143,10 +143,9 @@
                 @endif
 
                 <form wire:submit.prevent="savePopup" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Pratinjau Pop-up Saat Ini:</label>
-                            <div class="w-full bg-gray-100 rounded-xl overflow-hidden border-2 border-dashed border-gray-300 relative flex items-center justify-center" style="aspect-ratio: 4/5;">
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="flex-shrink-0">
+                            <div class="bg-gray-100 rounded-xl overflow-hidden border-2 border-dashed border-gray-300 relative flex items-center justify-center" style="aspect-ratio: 4/5; width: 200px;">
                                 @if($popup_image_url)
                                     <img src="{{ $popup_image_url }}" alt="Pop-up Promo" class="w-full h-full object-cover">
                                 @elseif($popup_image_upload)
@@ -160,20 +159,20 @@
                             </div>
                         </div>
 
-                        <div class="space-y-6">
+                        <div class="flex-1 space-y-6">
                             <div>
-                                <label for="popup_image_upload" class="block text-gray-700 text-sm font-bold mb-2">Unggah Gambar Baru (Rasio Vertikal Disarankan):</label>
+                                <label for="popup_image_upload" class="block text-gray-700 text-sm font-bold mb-2">Unggah Gambar Baru (Disarankan Rasio 4:5):</label>
                                 <input type="file" class="shadow-sm border border-gray-300 focus:border-toreno-brown focus:ring focus:ring-toreno-brown/50 rounded-md w-full p-2" id="popup_image_upload" wire:model="popup_image_upload" accept="image/*">
                                 @error('popup_image_upload') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>@enderror
                                 <div wire:loading wire:target="popup_image_upload" class="text-sm text-gray-500 mt-2">Memproses gambar...</div>
                             </div>
 
-                            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                            <div class="bg-gray-50 p-4 rounded-xl border-2 border-toreno-brown/30">
                                 <label class="flex items-center cursor-pointer">
                                     <div class="relative">
                                         <input type="checkbox" wire:model="popup_is_active" class="sr-only">
-                                        <div class="block bg-gray-300 w-10 h-6 rounded-full transition" :class="{'bg-green-500': $wire.popup_is_active}"></div>
-                                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition transform" :class="{'translate-x-4': $wire.popup_is_active}"></div>
+                                        <div class="block bg-gray-300 w-10 h-6 rounded-full transition border border-gray-400/30 shadow-inner" :class="{'bg-green-500 border-green-600/30': $wire.popup_is_active}"></div>
+                                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition transform shadow" :class="{'translate-x-4': $wire.popup_is_active}"></div>
                                     </div>
                                     <div class="ml-3 text-gray-700 font-bold">
                                         Aktifkan Pop-up
