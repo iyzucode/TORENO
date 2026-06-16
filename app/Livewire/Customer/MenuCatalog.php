@@ -35,9 +35,15 @@ class MenuCatalog extends Component
 
         $promotions = Promotion::where('is_active', true)->orderBy('sort_order')->get();
 
+        $popup = \App\Models\PopupPromotion::first();
+        $popupImageUrl = $popup ? $popup->image_url : null;
+        $popupIsActive = $popup ? $popup->is_active : false;
+
         return view('livewire.customer.menu-catalog', [
             'menusByCategory' => $menusByCategory,
             'promotions' => $promotions,
+            'popupImageUrl' => $popupImageUrl,
+            'popupIsActive' => $popupIsActive,
         ])->layout('layouts.customer');
     }
 }

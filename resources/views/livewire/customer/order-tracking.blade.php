@@ -196,15 +196,8 @@
             @endforeach
         </div>
         
-        <div class="text-sm border-b-2 border-gray-800 pb-3 mb-4 relative">
-            <!-- Cap LUNAS -->
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30 z-0">
-                <div class="transform -rotate-12 border-4 border-red-500 text-red-500 font-black text-4xl px-4 py-1 rounded-md uppercase tracking-widest" style="font-family: Arial, sans-serif;">
-                    LUNAS
-                </div>
-            </div>
-
-            <div class="flex justify-between text-gray-600 mb-1 font-semibold relative z-10">
+        <div class="text-sm border-b-2 border-gray-800 pb-3 mb-4">
+            <div class="flex justify-between text-gray-600 mb-1 font-semibold">
                 <span>Subtotal</span>
                 <span>Rp {{ number_format($order->subtotal ?? $order->total_amount, 0, ',', '.') }}</span>
             </div>

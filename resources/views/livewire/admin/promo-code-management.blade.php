@@ -53,7 +53,7 @@
                                     <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Persentase</span>
                                     <div class="mt-1 font-bold text-gray-800">{{ $promo->value }}%</div>
                                 @else
-                                    <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Nominal (Fixed)</span>
+                                    <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Nominal</span>
                                     <div class="mt-1 font-bold text-gray-800">Rp {{ number_format($promo->value, 0, ',', '.') }}</div>
                                 @endif
                             </td>

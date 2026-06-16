@@ -1,4 +1,57 @@
 <div>
+    <!-- Pop-up Promotion -->
+    @if($popupIsActive && $popupImageUrl)
+    <div x-data="{
+            showPopup: false,
+            init() {
+                if (!sessionStorage.getItem('promo_popup_shown')) {
+                    setTimeout(() => {
+                        this.showPopup = true;
+                        sessionStorage.setItem('promo_popup_shown', 'true');
+                    }, 500); // Tunda sedikit agar lebih estetik
+                }
+            }
+         }"
+         x-cloak>
+        <template x-teleport="body">
+            <div x-show="showPopup" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 flex items-center justify-center p-8"
+                 style="z-index: 9999;"
+                 @keydown.escape.window="showPopup = false">
+                
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showPopup = false"></div>
+                
+                <!-- Modal Content Wrapper -->
+                <div x-show="showPopup"
+                     x-transition:enter="transition ease-out duration-300 delay-100"
+                     x-transition:enter-start="opacity-0 scale-90 translate-y-8"
+                     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95"
+                     class="relative w-full max-w-sm">
+                    
+                    <!-- Close button in the top right corner -->
+                    <button @click="showPopup = false" class="absolute bg-black/40 hover:bg-black/60 text-white backdrop-blur-md shadow-md rounded-full p-3 transition z-20" style="top: 16px; right: 16px;" aria-label="Tutup">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    
+                    <!-- Popup Image Container -->
+                    <div class="w-full bg-white flex items-center justify-center overflow-hidden rounded-2xl" style="aspect-ratio: 4/5; border: 6px solid white; box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                        <img src="{{ $popupImageUrl }}" alt="Promo Pop-up" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+    @endif
     @if($promotions->isNotEmpty())
         <div class="mb-8 relative rounded-2xl overflow-hidden shadow-sm aspect-video bg-gray-100 touch-pan-y" 
              x-data="{ 

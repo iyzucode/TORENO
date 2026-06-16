@@ -129,6 +129,76 @@
                 @endif
             </div>
         </div>
+
+        <!-- Popup Promotion Section -->
+        <div class="mt-8 bg-white overflow-hidden shadow-xl sm:rounded-lg border border-toreno-brown/10">
+            <div class="p-6 sm:p-8 bg-white border-b border-gray-200">
+                <h3 class="text-lg font-bold text-toreno-brown mb-4 border-b pb-2">Pop-up Promosi (Muncul Pertama Kali)</h3>
+                <p class="text-sm text-gray-500 mb-6">Pop-up ini akan muncul satu kali per sesi saat pelanggan membuka halaman Katalog.</p>
+
+                @if (session()->has('popup_message'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6 shadow-sm" role="alert">
+                    <span class="block sm:inline">{{ session('popup_message') }}</span>
+                </div>
+                @endif
+
+                <form wire:submit.prevent="savePopup" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Pratinjau Pop-up Saat Ini:</label>
+                            <div class="w-full bg-gray-100 rounded-xl overflow-hidden border-2 border-dashed border-gray-300 relative flex items-center justify-center" style="aspect-ratio: 4/5;">
+                                @if($popup_image_url)
+                                    <img src="{{ $popup_image_url }}" alt="Pop-up Promo" class="w-full h-full object-cover">
+                                @elseif($popup_image_upload)
+                                    <img src="{{ $popup_image_upload->temporaryUrl() }}" alt="Preview" class="w-full h-full object-cover">
+                                @else
+                                    <div class="text-gray-400 text-center p-4">
+                                        <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        <span class="text-sm font-medium">Belum ada gambar</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div>
+                                <label for="popup_image_upload" class="block text-gray-700 text-sm font-bold mb-2">Unggah Gambar Baru (Rasio Vertikal Disarankan):</label>
+                                <input type="file" class="shadow-sm border border-gray-300 focus:border-toreno-brown focus:ring focus:ring-toreno-brown/50 rounded-md w-full p-2" id="popup_image_upload" wire:model="popup_image_upload" accept="image/*">
+                                @error('popup_image_upload') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>@enderror
+                                <div wire:loading wire:target="popup_image_upload" class="text-sm text-gray-500 mt-2">Memproses gambar...</div>
+                            </div>
+
+                            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                                <label class="flex items-center cursor-pointer">
+                                    <div class="relative">
+                                        <input type="checkbox" wire:model="popup_is_active" class="sr-only">
+                                        <div class="block bg-gray-300 w-10 h-6 rounded-full transition" :class="{'bg-green-500': $wire.popup_is_active}"></div>
+                                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition transform" :class="{'translate-x-4': $wire.popup_is_active}"></div>
+                                    </div>
+                                    <div class="ml-3 text-gray-700 font-bold">
+                                        Aktifkan Pop-up
+                                    </div>
+                                </label>
+                                <p class="text-xs text-gray-500 mt-2">Jika diaktifkan, pop-up akan otomatis muncul di Katalog (butuh gambar).</p>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button type="submit" wire:loading.attr="disabled" class="bg-toreno-brown hover:bg-toreno-accent text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center flex-1">
+                                    <span wire:loading.remove wire:target="savePopup">Simpan Pop-up</span>
+                                    <span wire:loading wire:target="savePopup">Menyimpan...</span>
+                                </button>
+
+                                @if($popup_image_url)
+                                <button type="button" wire:click="deletePopup" onclick="return confirm('Yakin ingin menghapus gambar pop-up ini?')" class="bg-white border border-red-500 text-red-500 hover:bg-red-50 font-bold py-2.5 px-6 rounded-lg shadow-sm transition active:scale-95">
+                                    Hapus
+                                </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     {{-- SortableJS CDN --}}
