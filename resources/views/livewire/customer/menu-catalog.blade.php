@@ -4,6 +4,14 @@
     <div x-data="{
             showPopup: false,
             init() {
+                this.$watch('showPopup', value => {
+                    if (value) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                });
+
                 if (!sessionStorage.getItem('promo_popup_shown')) {
                     setTimeout(() => {
                         this.showPopup = true;
