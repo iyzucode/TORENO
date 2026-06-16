@@ -119,17 +119,34 @@
                     Riwayat Penjualan (Pesanan)
                 </h3>
                 
-                <!-- Toggle Switch for Expand All -->
-                <label class="flex items-center cursor-pointer">
-                    <div class="relative">
-                        <input type="checkbox" class="sr-only" x-model="expandAll">
-                        <div class="block bg-gray-200 w-10 h-6 rounded-full transition-colors duration-300" :class="{ 'bg-toreno-accent': expandAll }"></div>
-                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300" :class="{ 'transform translate-x-4': expandAll }"></div>
-                    </div>
-                    <div class="ml-3 text-sm font-semibold text-gray-600 select-none" x-text="expandAll ? 'Sembunyikan Detail' : 'Tampilkan Detail'">
-                        Tampilkan Detail
-                    </div>
-                </label>
+                <div class="flex items-center gap-4">
+                    <!-- Export Excel Button -->
+                    @if($ordersList->count() > 0)
+                    <button wire:click="exportSalesData" wire:loading.attr="disabled" wire:target="exportSalesData"
+                            class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg active:scale-95">
+                        <span wire:loading.remove wire:target="exportSalesData">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        </span>
+                        <span wire:loading wire:target="exportSalesData">
+                            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                        </span>
+                        <span wire:loading.remove wire:target="exportSalesData">Export Excel</span>
+                        <span wire:loading wire:target="exportSalesData">Mengunduh...</span>
+                    </button>
+                    @endif
+
+                    <!-- Toggle Switch for Expand All -->
+                    <label class="flex items-center cursor-pointer">
+                        <div class="relative">
+                            <input type="checkbox" class="sr-only" x-model="expandAll">
+                            <div class="block bg-gray-200 w-10 h-6 rounded-full transition-colors duration-300" :class="{ 'bg-toreno-accent': expandAll }"></div>
+                            <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300" :class="{ 'transform translate-x-4': expandAll }"></div>
+                        </div>
+                        <div class="ml-3 text-sm font-semibold text-gray-600 select-none" x-text="expandAll ? 'Sembunyikan Detail' : 'Tampilkan Detail'">
+                            Tampilkan Detail
+                        </div>
+                    </label>
+                </div>
             </div>
             
             <div class="overflow-x-auto">

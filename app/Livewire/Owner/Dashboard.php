@@ -4,9 +4,11 @@ namespace App\Livewire\Owner;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Exports\SalesExport;
 use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Dashboard extends Component
 {
@@ -27,6 +29,15 @@ class Dashboard extends Component
             'startDate' => 'required|date',
             'endDate' => 'required|date|after_or_equal:startDate',
         ]);
+    }
+
+    public function exportSalesData()
+    {
+        $start = Carbon::parse($this->startDate)->format('Y-m-d_Hi');
+        $end = Carbon::parse($this->endDate)->format('Y-m-d_Hi');
+        $filename = "riwayat_penjualan_{$start}_sd_{$end}.xlsx";
+
+        return Excel::download(new SalesExport($this->startDate, $this->endDate), $filename);
     }
 
     public function render()
